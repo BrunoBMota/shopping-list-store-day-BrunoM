@@ -1,11 +1,14 @@
+'use strict';
+
 const store = {
   items: [
-    { id: cuid(), name: 'apples', checked: false },
-    { id: cuid(), name: 'oranges', checked: false },
-    { id: cuid(), name: 'milk', checked: true },
-    { id: cuid(), name: 'bread', checked: false }
+    { id: cuid(), name: 'apples', checked: false, editable: false },
+    { id: cuid(), name: 'oranges', checked: false, editable: false },
+    { id: cuid(), name: 'milk', checked: true, editable: false },
+    { id: cuid(), name: 'bread', checked: false, editable: false }
   ],
-  hideCheckedItems: false
+  hideCheckedItems: false,
+  hideUncheckedItems: false
 };
 
 const generateItemElement = function (item) {
@@ -49,6 +52,11 @@ const render = function () {
   // property of false are included.
   if (store.hideCheckedItems) {
     items = items.filter(item => !item.checked);
+  }
+
+  if(store.hideUncheckedItems) {
+    //todo
+    items = items.filter(item => 0);
   }
 
   /**
@@ -135,12 +143,30 @@ const toggleCheckedItemsFilter = function () {
 };
 
 /**
+ * Toggles the store.hideAllItems property
+ */
+const toggleUncheckedItemsItemsFilter = function () {
+  store.hideUncheckedItems = !store.hideUncheckedItems;
+};
+
+/**
  * Places an event listener on the checkbox 
  * for hiding completed items.
  */
 const handleToggleFilterClick = function () {
   $('.js-filter-checked').click(() => {
     toggleCheckedItemsFilter();
+    render();
+  });
+};
+
+/**
+ * Places an event listener on the checkbox
+ * for hiding all unchecked items.
+ */
+const handleToggleFilterUncheckedClick = function () {
+  $('.js-filter-unchecked').click(() => {
+    toggleUncheckedItemsItemsFilter();
     render();
   });
 };
@@ -160,6 +186,7 @@ const handleShoppingList = function () {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleToggleFilterClick();
+  handleToggleFilterUncheckedClick();
 };
 
 // when the page loads, call `handleShoppingList`
